@@ -1,0 +1,13 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: ubuntu-netutils
+spec:
+  containers:
+  - name: ubuntu-netutils
+    image: ubuntu
+    command: ['sh', '-c', 'apt update && apt install -y curl dnsutils iputils-ping nano; sleep 86400;']
+    imagePullPolicy: IfNotPresent
+  restartPolicy: Always
+  nodeSelector:
+    name: node1

@@ -1,0 +1,13 @@
+ingress:
+  enabled: true
+  annotations:
+    ingress.kubernetes.io/ssl-redirect: "true"
+    kubernetes.io/tls-acme: "true"
+    kubernetes.io/ingress.class: "nginx"
+    cert-manager.io/cluster-issuer: letsencrypt-prod
+  hosts:
+    - mailhog.kubeplay.website
+  tls:
+    - hosts:
+      - mailhog.kubeplay.website
+      secretName: mailhog-letsencrypt-prod

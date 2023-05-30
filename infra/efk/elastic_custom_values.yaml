@@ -1,0 +1,3 @@
+replicas: 1
+imageTag: 6.5.4
+minimumMasterNodes: 1

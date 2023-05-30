@@ -1,0 +1,338 @@
+global:
+  operator:
+    enabled: false
+    rollout:
+      autoPause: true
+  edition: ce
+  application:
+    create: false
+    links: []
+    allowClusterRoles: true
+  hosts:
+    domain: kubeplay.website
+    https: true
+    externalIP:
+    ssh: ~
+    gitlab: {}
+    minio: {}
+    registry: {}
+  ingress:
+    configureCertmanager: false
+    annotations:
+      kubernetes.io/ingress.class: nginx
+      kubernetes.io/tls-acme: "true"
+      cert-manager.io/cluster-issuer: letsencrypt-prod
+      nginx.ingress.kubernetes.io/force-ssl-redirect: "true"
+    enabled: true
+    class: nginx
+    tls:
+      enabled: true
+  initialRootPassword:
+    secret: gitlab-gitlab-initial-root-password
+  psql:
+    password: {}
+  redis:
+    password:
+      enabled: true
+  gitaly:
+    authToken: {}
+    internal:
+      names: ['default']
+    external: []
+  minio:
+    enabled: true
+    credentials: {}
+  grafana:
+    enabled: false
+  appConfig:
+    enableUsagePing: true
+    enableImpersonation:
+    defaultCanCreateGroup: true
+    usernameChangingEnabled: true
+    issueClosingPattern:
+    defaultTheme:
+    defaultProjectsFeatures:
+      issues: true
+      mergeRequests: true
+      wiki: true
+      snippets: true
+      builds: true
+    webhookTimeout:
+    cron_jobs: {}
+    gravatar:
+      plainUrl:
+      sslUrl:
+    extra:
+      googleAnalyticsId:
+      piwikUrl:
+      piwikSiteId:
+    lfs:
+      bucket: git-lfs
+      connection: {}
+    artifacts:
+      bucket: gitlab-artifacts
+      connection: {}
+    uploads:
+      bucket: gitlab-uploads
+      connection: {}
+    packages:
+      bucket: gitlab-packages
+      connection: {}
+    externalDiffs:
+      when:
+      bucket: gitlab-mr-diffs
+      connection: {}
+    pseudonymizer:
+      configMap:
+      bucket: gitlab-pseudo
+      connection: {}
+    backups:
+      bucket: gitlab-backups
+      tmpBucket: tmp
+    incomingEmail:
+      enabled: false
+      address: ""
+      host: "imap.gmail.com"
+      port: 993
+      ssl: true
+      startTls: false
+      user: ""
+      password:
+        secret: ""
+        key: password
+      mailbox: inbox
+      idleTimeout: 60
+    ldap:
+      servers: {}
+    omniauth:
+      enabled: false
+      autoSignInWithProvider:
+      syncProfileFromProvider: []
+      syncProfileAttributes: ['email']
+      allowSingleSignOn: ['saml']
+      blockAutoCreatedUsers: true
+      autoLinkLdapUser: false
+      autoLinkSamlUser: false
+      externalProviders: []
+      allowBypassTwoFactor: []
+      providers: []
+  shell:
+    authToken: {}
+    hostKeys: {}
+  railsSecrets: {}
+  registry:
+    bucket: registry
+    certificate: {}
+    httpSecret: {}
+  runner:
+    registrationToken: {}
+  smtp:
+    enabled: false
+    address: smtp.mailgun.org
+    port: 2525
+    user_name: ""
+    password:
+      secret: ""
+      key: password
+    authentication: "plain"
+    starttls_auto: false
+    openssl_verify_mode: "peer"
+  email:
+    from: ''
+    display_name: GitLab
+    reply_to: ''
+    subject_suffix: ''
+    smime:
+      enabled: false
+      secretName: ""
+      keyName: "tls.key"
+      certName: "tls.crt"
+  time_zone: UTC
+  service:
+    annotations: {}
+  deployment:
+    annotations: {}
+
+  antiAffinity: soft
+
+  workhorse: {}
+  certificates:
+    image:
+      repository: registry.gitlab.com/gitlab-org/build/cng/alpine-certificates
+      tag: 20171114-r3
+    customCAs: []
+  kubectl:
+    image:
+      repository: registry.gitlab.com/gitlab-org/build/cng/kubectl
+      tag: v1.12.10
+      pullSecrets: []
+
+upgradeCheck:
+  enabled: true
+  image:
+    repository: busybox
+    tag: latest
+  securityContext:
+    runAsUser: 65534
+    fsGroup: 65534
+  tolerations: []
+  resources:
+    requests:
+      cpu: 50m
+
+certmanager:
+  install: false
+  rbac:
+    create: true
+
+nginx-ingress:
+  enabled: false
+  tcpExternalConfig: "true"
+  controller:
+    config:
+      hsts-include-subdomains: "false"
+      server-name-hash-bucket-size: "256"
+      enable-vts-status: "true"
+      use-http2: "false"
+      ssl-ciphers: "ECDHE-RSA-AES256-GCM-SHA384:ECDHE-RSA-AES128-GCM-SHA256:ECDHE-RSA-AES256-SHA384:ECDHE-RSA-AES128-SHA256:ECDHE-RSA-AES256-SHA:ECDHE-RSA-AES128-SHA:AES256-GCM-SHA384:AES128-GCM-SHA256:AES256-SHA256:AES128-SHA256:AES256-SHA:AES128-SHA:!aNULL:!eNULL:!EXPORT:!DES:!MD5:!PSK:!RC4"
+      ssl-protocols: "TLSv1.1 TLSv1.2"
+      server-tokens: "false"
+    extraArgs:
+      force-namespace-isolation: ""
+    service:
+      externalTrafficPolicy: "Local"
+    resources:
+      requests:
+        cpu: 100m
+        memory: 100Mi
+    publishService:
+      enabled: true
+    replicaCount: 3
+    minAvailable: 2
+    scope:
+      enabled: true
+    stats:
+      enabled: true
+    metrics:
+      enabled: true
+      service:
+        annotations:
+          prometheus.io/scrape: "true"
+          prometheus.io/port: "10254"
+  defaultBackend:
+    minAvailable: 1
+    replicaCount: 2
+    resources:
+      requests:
+        cpu: 5m
+        memory: 5Mi
+  rbac:
+    create: true
+  serviceAccount:
+    create: true
+
+prometheus:
+  install: false
+  rbac:
+    create: true
+  alertmanager:
+    enabled: false
+  alertmanagerFiles:
+    alertmanager.yml: {}
+  kubeStateMetrics:
+    enabled: false
+  nodeExporter:
+    enabled: false
+  pushgateway:
+    enabled: false
+  server:
+    retention: 15d
+
+redis-ha:
+  enabled: false
+  nameOverride: redis
+
+postgresql:
+  install: true
+  postgresUser: gitlab
+  postgresDatabase: gitlabhq_production
+  imageTag: 9.6.8
+  usePasswordFile: true
+  existingSecret: 'secret'
+  metrics:
+    enabled: true
+registry:
+  enabled: true
+  ingress:
+    tls:
+      secretName: registry-letsencrypt-prod
+
+minio:
+    ingress:
+      tls:
+        secretName: minio-letsencrypt-prod
+shared-secrets:
+  enabled: true
+  rbac:
+    create: true
+
+gitlab-runner:
+  install: true  
+  rbac:
+    create: true  
+  runners:
+    image: gitlab/gitlab-runner:v12.4.0
+    privileged: true
+    locked: false
+    nodeSelector:
+      gitlab-runner: true
+    kubernetes:
+      volumes:
+      - type: "host_path"
+        name: "docker-socket"
+        path: "/var/run/docker.sock"
+        mount_path: "/var/run/docker.sock"
+    cache:
+      cacheType: s3
+      s3BucketName: runner-cache
+      cacheShared: true
+      s3BucketLocation: us-east-1
+      s3CachePath: gitlab-runner
+      s3CacheInsecure: false
+
+grafana:
+  admin:
+    existingSecret: bogus
+  env:
+    GF_SECURITY_ADMIN_USER: bogus
+    GF_SECURITY_ADMIN_PASSWORD: bogus
+  command: [ "sh", "-x", "/tmp/scripts/import-secret.sh" ]
+  sidecar:
+    dashboards:
+      enabled: true
+      label: gitlab_grafana_dashboard
+    datasources:
+      enabled: true
+      label: gitlab_grafana_datasource
+  grafana.ini:
+    server:
+      root_url: http://localhost/-/grafana/
+  extraSecretMounts:
+    - name: initial-password
+      mountPath: /tmp/initial
+      readOnly: true
+      secretName: gitlab-grafana-initial-password
+      defaultMode: 400
+  extraConfigmapMounts:
+    - name: import-secret
+      mountPath: /tmp/scripts
+      configMap: gitlab-grafana-import-secret
+      readOnly: true
+
+gitlab:
+  unicorn:
+    enabled: true
+    ingress:
+      tls:
+        secretName: unicorn-letsencrypt-prod
+    

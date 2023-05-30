@@ -1,0 +1,12 @@
+---
+helm_enabled: true
+
+registry_enabled: false
+local_path_provisioner_enabled: false
+cephfs_provisioner_enabled: false
+rbd_provisioner_enabled: false
+ingress_nginx_enabled: false
+ingress_publish_status_address: ""
+
+cert_manager_enabled: false
+

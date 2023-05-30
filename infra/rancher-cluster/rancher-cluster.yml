@@ -1,0 +1,49 @@
+nodes:
+  - address: kubeplay.website
+    internal_address: 10.128.15.213
+    hostname_override: node1
+    user: appuser
+    role: 
+      - controlplane
+      - etcd
+      - worker
+    labels:
+      beta.kubernetes.io/fluentd-ds-ready: true
+  - address: 10.128.15.209
+    hostname_override: node2
+    user: appuser
+    role: 
+      - controlplane
+      - etcd
+      - worker
+    labels:
+      beta.kubernetes.io/fluentd-ds-ready: true
+      gitlab-runner: true
+  - address: 10.128.15.210
+    hostname_override: node3
+    user: appuser
+    role: 
+      - controlplane
+      - etcd
+      - worker
+    labels:
+      beta.kubernetes.io/fluentd-ds-ready: true
+      elastichost: true
+ssh_key_path: ~/.ssh/appuser
+
+cluster_name: cluster.local
+
+ingress:
+    provider: none
+
+bastion_host:
+    address: kubeplay.website
+    user: appuser
+    port: 22
+    ssh_key_path: ~/.ssh/appuser
+
+services:
+  etcd:
+    snapshot: true
+    creation: 6h
+    retention: 24h
